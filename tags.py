@@ -1,18 +1,13 @@
-import re
-from itertools import combinations
+from keybert import KeyBERT
 
-def generate_tags(text, max_phrases=10):
-    text = text.lower()
-    text = re.sub(r'[^\w\s]', '', text)
+kw_model = KeyBERT()
 
-    stopwords = set([
-        'the', 'is', 'in', 'for', 'and', 'of', 'to', 'a', 'on', 'with', 'by',
-        'from', 'at', 'this', 'that', 'these', 'those', 'it', 'an'
-    ])
+def generate_tags(text, max_keywords=15):
+    # Extract keywords using BERT (no manual stopwords or templates!)
+    keywords = kw_model.extract_keywords(text, keyphrase_ngram_range=(1, 3), stop_words='english', top_n=max_keywords)
 
-    words = [word for word in text.split() if word not in stopwords]
-    phrases = list(set([
-        " ".join(p) for p in combinations(words, 2)
-    ]))
+    # Only get the keyword text
+    tags = [kw[0] for kw in keywords]
 
-    return ", ".join(phrases[:max_phrases])
+    # Return as comma-separated string
+    return ", ".join(tags)
