@@ -2,5 +2,4 @@ flask
 gunicorn
 keybert
 sentence-transformers
-scikit-learn
-numpy
+
